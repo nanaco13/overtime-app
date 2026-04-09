@@ -7,7 +7,7 @@ import os
 
 app = FastAPI()
 
-# ★ここ修正（重要）
+# テンプレートパス（Render対応）
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 templates = Jinja2Templates(directory=os.path.join(BASE_DIR, "templates"))
 
@@ -39,17 +39,17 @@ def init_db():
 init_db()
 
 # =========================
-# メール送信（今は停止）
+# メール送信（一旦停止）
 # =========================
 def send_mail(to_list, subject, html_body):
-    print("メール送信スキップ（テスト中）")
+    print("メール送信スキップ")
 
 # =========================
 # フォーム表示
 # =========================
-@app.get("/")
-def form():
-    return HTMLResponse("<h1>OK</h1>")
+@app.get("/", response_class=HTMLResponse)
+def form(request: Request):
+    return templates.TemplateResponse("form.html", {"request": request})
 
 # =========================
 # 申請
@@ -75,25 +75,24 @@ def apply(
     conn.commit()
     conn.close()
 
-    base_url = "https://overtime-app.onrender.com"
+    base_url = "https://overtime-app2.onrender.com"
 
     approve_link = f"{base_url}/approve?id={request_id}"
     reject_link = f"{base_url}/reject?id={request_id}"
 
-    bosses = ["nanako.oomura@fortis-frp.com"]
-
     html_body = f"""
-    <h3>残業申請があります</h3>
-    名前: {name}<br>
-    日付: {date}<br>
-    時間: {hours}<br>
-    理由: {reason}<br><br>
+    残業申請があります
 
-    <a href="{approve_link}">承認</a>
-    <a href="{reject_link}">却下</a>
+    名前: {name}
+    日付: {date}
+    時間: {hours}
+    理由: {reason}
+
+    承認: {approve_link}
+    却下: {reject_link}
     """
 
-    send_mail(bosses, "残業申請", html_body)
+    send_mail(["test@example.com"], "残業申請", html_body)
 
     return HTMLResponse("<h2>申請完了しました</h2>")
 
