@@ -88,7 +88,7 @@ def apply(
     conn.close()
 
     # 🔴 ここをRenderのURLに変更
-    base_url = "https://your-app.onrender.com"
+    base_url = "https://overtime-app2.onrender.com"
 
     approve_link = f"{base_url}/approve?id={request_id}"
     reject_link = f"{base_url}/reject?id={request_id}"
