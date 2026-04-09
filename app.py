@@ -47,9 +47,9 @@ def send_mail(to_list, subject, html_body):
 # =========================
 # フォーム表示
 # =========================
-@app.get("/", response_class=HTMLResponse)
-def form(request: Request):
-    return templates.TemplateResponse("form.html", {"request": request})
+@app.get("/")
+def form():
+    return HTMLResponse("<h1>OK</h1>")
 
 # =========================
 # 申請
