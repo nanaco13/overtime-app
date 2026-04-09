@@ -3,9 +3,13 @@ from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 import sqlite3
 from datetime import datetime
+import os
 
 app = FastAPI()
-templates = Jinja2Templates(directory="templates")
+
+# ★ここ修正（重要）
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+templates = Jinja2Templates(directory=os.path.join(BASE_DIR, "templates"))
 
 DB_NAME = "db.sqlite3"
 
@@ -41,7 +45,7 @@ def send_mail(to_list, subject, html_body):
     print("メール送信スキップ（テスト中）")
 
 # =========================
-# フォーム表示（←ここ重要修正）
+# フォーム表示
 # =========================
 @app.get("/", response_class=HTMLResponse)
 def form(request: Request):
@@ -71,13 +75,12 @@ def apply(
     conn.commit()
     conn.close()
 
-    # Render用URL（あとで変更）
     base_url = "https://overtime-app.onrender.com"
 
     approve_link = f"{base_url}/approve?id={request_id}"
     reject_link = f"{base_url}/reject?id={request_id}"
 
-    bosses = ["test@example.com"]
+    bosses = ["nanako.oomura@fortis-frp.com"]
 
     html_body = f"""
     <h3>残業申請があります</h3>
