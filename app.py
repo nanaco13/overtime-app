@@ -3,8 +3,6 @@ from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 import sqlite3
 from datetime import datetime
-import smtplib
-from email.mime.text import MIMEText
 
 app = FastAPI()
 templates = Jinja2Templates(directory="templates")
@@ -12,7 +10,7 @@ templates = Jinja2Templates(directory="templates")
 DB_NAME = "db.sqlite3"
 
 # =========================
-# DB初期化（カラム追加）
+# DB初期化
 # =========================
 def init_db():
     conn = sqlite3.connect(DB_NAME)
@@ -37,33 +35,17 @@ def init_db():
 init_db()
 
 # =========================
-# メール送信（SMTP）
+# メール送信（今は停止）
 # =========================
 def send_mail(to_list, subject, html_body):
-    smtp_server = "smtp.office365.com"
-    port = 587
-    sender = "あなたのメール"
-    password = "アプリパスワード"
-
-    msg = MIMEText(html_body, "html")
-    msg["Subject"] = subject
-    msg["From"] = sender
-    msg["To"] = ",".join(to_list)
-
-    server = smtplib.SMTP(smtp_server, port)
-    server.starttls()
-    server.login(sender, password)
-    server.sendmail(sender, to_list, msg.as_string())
-    server.quit()
+    print("メール送信スキップ（テスト中）")
 
 # =========================
-# フォーム表示
+# フォーム表示（←ここ重要修正）
 # =========================
-@app.get("/", response_class=HTMLResponse)
 @app.get("/", response_class=HTMLResponse)
 def form(request: Request):
     return templates.TemplateResponse("form.html", {"request": request})
-
 
 # =========================
 # 申請
@@ -89,13 +71,13 @@ def apply(
     conn.commit()
     conn.close()
 
-    # 🔴 ここをRenderのURLに変更
-    base_url = "https://overtime-app2.onrender.com"
+    # Render用URL（あとで変更）
+    base_url = "https://overtime-app.onrender.com"
 
     approve_link = f"{base_url}/approve?id={request_id}"
     reject_link = f"{base_url}/reject?id={request_id}"
 
-    bosses = ["上司のメール"]
+    bosses = ["test@example.com"]
 
     html_body = f"""
     <h3>残業申請があります</h3>
@@ -104,8 +86,8 @@ def apply(
     時間: {hours}<br>
     理由: {reason}<br><br>
 
-    <a href="{approve_link}" style="padding:10px;background:#4CAF50;color:white;">承認</a>
-    <a href="{reject_link}" style="padding:10px;background:#f44336;color:white;">却下</a>
+    <a href="{approve_link}">承認</a>
+    <a href="{reject_link}">却下</a>
     """
 
     send_mail(bosses, "残業申請", html_body)
@@ -126,7 +108,7 @@ def approve(id: int):
             approved_at=?,
             approved_by=?
         WHERE id=?
-    """, (datetime.now(), "承認者名", id))
+    """, (datetime.now(), "承認者", id))
 
     conn.commit()
     conn.close()
@@ -147,7 +129,7 @@ def reject(id: int):
             approved_at=?,
             approved_by=?
         WHERE id=?
-    """, (datetime.now(), "承認者名", id))
+    """, (datetime.now(), "承認者", id))
 
     conn.commit()
     conn.close()
@@ -155,7 +137,7 @@ def reject(id: int):
     return HTMLResponse("<h2>却下しました</h2>")
 
 # =========================
-# 履歴表示
+# 履歴
 # =========================
 @app.get("/history", response_class=HTMLResponse)
 def history():
@@ -169,15 +151,15 @@ def history():
     html = """
     <html><body>
     <h2>申請履歴</h2>
-    <table border="1" cellpadding="5">
+    <table border="1">
     <tr>
-    <th>ID</th><th>名前</th><th>日付</th><th>時間</th><th>理由</th>
-    <th>状態</th><th>申請日時</th><th>承認日時</th><th>担当</th>
+    <th>ID</th><th>名前</th><th>メール</th><th>日付</th><th>時間</th>
+    <th>理由</th><th>状態</th><th>申請日時</th><th>承認日時</th><th>担当</th>
     </tr>
     """
 
     for r in rows:
-        html += f"<tr>{''.join(f'<td>{x}</td>' for x in r)}</tr>"
+        html += "<tr>" + "".join(f"<td>{x}</td>" for x in r) + "</tr>"
 
     html += "</table></body></html>"
 
