@@ -2,76 +2,11 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>残業申請</title>
-
-<style>
-body {
-    font-family: sans-serif;
-    background:#f5f7fb;
-}
-.container {
-    max-width:400px;
-    width:90%;
-    margin:60px auto;
-    background:white;
-    padding:30px;
-    border-radius:10px;
-}
-input, select {
-    width:100%;
-    margin-bottom:10px;
-    padding:10px;
-    font-size:16px;
-}
-button {
-    width:100%;
-    background:#4a90e2;
-    color:white;
-    padding:12px;
-    border:none;
-    border-radius:6px;
-    font-size:16px;
-    margin-top:5px;
-}
-.history-btn {
-    background:#777;
-}
-</style>
+<title>テスト</title>
 </head>
-
 <body>
 
-<div class="container">
-<h2>残業申請</h2>
-
-<form action="/apply" method="post">
-
-<input type="text" name="name" placeholder="名前" required>
-
-<input type="email" name="email" placeholder="自分のメール" required>
-
-<input type="date" name="date" required>
-
-<input type="number" step="0.5" name="hours" placeholder="時間" required>
-
-<select name="reason">
-<option value="納期対応">納期対応</option>
-<option value="客先対応">客先対応</option>
-<option value="人手不足">人手不足</option>
-<option value="段取り不良">段取り不良</option>
-<option value="作業遅れ">作業遅れ</option>
-</select>
-
-<button type="submit">申請</button>
-
-</form>
-
-<form action="/history" method="get">
-    <button class="history-btn">履歴を見る</button>
-</form>
-
-</div>
+<h1>フォームOK</h1>
 
 </body>
 </html>
