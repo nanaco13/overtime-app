@@ -131,16 +131,16 @@ def apply(
     approve_link = f"{base_url}/approve?id={request_id}"
     reject_link  = f"{base_url}/reject?id={request_id}"
 
-    body = f"""残業申請があります
+    body = f"""残業申請があります<br>
 
-名前: {name}
-日付: {date}
-時間: {hours}時間
-理由: {reason}
+名前: {name}<br>
+日付: {date}<br>
+時間: {hours}時間<br>
+理由: {reason}<br>
 
 <a href="{approve_link}" style="padding:10px 20px;background:#28a745;color:white;text-decoration:none;border-radius:5px;">
 承認する
-</a>
+</a><br>
 
 <br><br>
 
@@ -173,10 +173,10 @@ def approve(id: int):
         name, email, date, hours, reason = row
         body = f"""残業申請が承認されました
 
-名前: {name}
-日付: {date}
-時間: {hours}時間
-理由: {reason}
+名前: {name}<br>
+日付: {date}<br>
+時間: {hours}時間<br>
+理由: {reason}<br>
 """
         send_mail(APPROVERS, f"Zangyo Shinsei: {name}", body)
 
