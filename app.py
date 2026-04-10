@@ -81,8 +81,9 @@ def send_mail(to_list, subject, body):
         subject=subject,
         plain_text_content=body
     )
+    message.subject = subject
     sg = SendGridAPIClient(SENDGRID_API_KEY)
-    sg.send(message)
+    response = sg.send(message)
 
 # =========================
 # フォーム表示
@@ -160,7 +161,7 @@ def approve(id: int):
 時間: {hours}時間
 理由: {reason}
 """
-        send_mail([email] + APPROVERS, f"【承認】残業申請　{name}", body)
+        send_mail(APPROVERS, f"Zangyo Shinsei: {name}", body)
 
     return HTMLResponse("<h2>承認しました。申請者と承認者全員にメールを送信しました。</h2>")
 
