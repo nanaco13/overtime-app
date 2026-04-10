@@ -79,7 +79,7 @@ def apply(
     承認: {approve_link}
     却下: {reject_link}
     """
-    send_mail(["nanako.oomura@fortis-frp.com","専務メールアドレス"], "残業申請", html_body)
+    send_mail(["nanako.oomura@fortis-frp.com"], "残業申請", html_body)
     return HTMLResponse("<h2>申請完了しました</h2>")
 
 @app.get("/approve")
