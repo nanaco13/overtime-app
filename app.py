@@ -1,6 +1,7 @@
 from fastapi import FastAPI, Form
 from fastapi.responses import HTMLResponse
 import sqlite3
+import requests
 from datetime import datetime
 import os
 from fastapi import FastAPI, Form, Depends, HTTPException
@@ -74,16 +75,25 @@ init_db()
 # =========================
 # メール送信
 # =========================
+import requests
+import json
+
 def send_mail(to_list, subject, body):
-    message = Mail(
-        from_email=FROM_ADDR,
-        to_emails=to_list,
-        subject=subject,
-        plain_text_content=body
+    data = {
+        "personalizations": [{"to": [{"email": e} for e in to_list]}],
+        "from": {"email": FROM_ADDR},
+        "subject": subject,
+        "content": [{"type": "text/plain", "value": body}]
+    }
+    headers = {
+        "Authorization": f"Bearer {SENDGRID_API_KEY}",
+        "Content-Type": "application/json; charset=utf-8"
+    }
+    requests.post(
+        "https://api.sendgrid.com/v3/mail/send",
+        headers=headers,
+        data=json.dumps(data, ensure_ascii=False).encode("utf-8")
     )
-    message.subject = subject
-    sg = SendGridAPIClient(SENDGRID_API_KEY)
-    response = sg.send(message)
 
 # =========================
 # フォーム表示
