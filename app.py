@@ -131,7 +131,7 @@ def apply(
 承認: {approve_link}
 却下: {reject_link}
 """
-    send_mail(APPROVERS, f"【残業申請】{name}", body)
+    send_mail(APPROVERS, f"Zangyo Shinsei: {name}", body)
 
     return HTMLResponse("<h2>申請完了しました。承認者にメールを送信しました。</h2>")
 
@@ -191,7 +191,7 @@ def reject(id: int):
 時間: {hours}時間
 理由: {reason}
 """
-        send_mail([email] + APPROVERS, f"【却下】残業申請　{name}", body)
+        send_mail(APPROVERS, f"Zangyo Shinsei: {name}", body)
 
     return HTMLResponse("<h2>却下しました。申請者と承認者全員にメールを送信しました。</h2>")
 
