@@ -3,14 +3,13 @@ from fastapi.responses import HTMLResponse
 import sqlite3
 from datetime import datetime
 import os
-import smtplib
-from email.mime.text import MIMEText
-from email.mime.multipart import MIMEMultipart
 from fastapi import FastAPI, Form, Depends, HTTPException
 from fastapi.security import HTTPBasic, HTTPBasicCredentials
 import secrets
+from sendgrid import SendGridAPIClient
+from sendgrid.helpers.mail import Mail
 
-
+SENDGRID_API_KEY = "ここにコピーしたAPIキー"
 
 app = FastAPI()
 
@@ -76,16 +75,14 @@ init_db()
 # メール送信
 # =========================
 def send_mail(to_list, subject, body):
-    msg = MIMEMultipart()
-    msg["Subject"] = subject
-    msg["From"]    = FROM_ADDR
-    msg["To"]      = ", ".join(to_list)
-    msg.attach(MIMEText(body, "plain", "utf-8"))
-
-    with smtplib.SMTP(SMTP_HOST, SMTP_PORT) as server:
-        server.starttls()
-        server.login(FROM_ADDR, PASSWORD)
-        server.sendmail(FROM_ADDR, to_list, msg.as_string())
+    message = Mail(
+        from_email=FROM_ADDR,
+        to_emails=to_list,
+        subject=subject,
+        plain_text_content=body
+    )
+    sg = SendGridAPIClient(SENDGRID_API_KEY)
+    sg.send(message)
 
 # =========================
 # フォーム表示
