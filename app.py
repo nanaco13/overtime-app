@@ -83,7 +83,7 @@ def send_mail(to_list, subject, body):
         "personalizations": [{"to": [{"email": e} for e in to_list]}],
         "from": {"email": FROM_ADDR},
         "subject": subject,
-        "content": [{"type": "text/plain", "value": body}]
+        "content": [{"type": "text/html", "value": body}]
     }
     headers = {
         "Authorization": "Bearer " + SENDGRID_API_KEY,
@@ -138,8 +138,15 @@ def apply(
 時間: {hours}時間
 理由: {reason}
 
-承認: {approve_link}
-却下: {reject_link}
+<a href="{approve_link}" style="padding:10px 20px;background:#28a745;color:white;text-decoration:none;border-radius:5px;">
+承認する
+</a>
+
+<br><br>
+
+<a href="{reject_link}" style="padding:10px 20px;background:#dc3545;color:white;text-decoration:none;border-radius:5px;">
+却下する
+</a>
 """
     send_mail(APPROVERS, f"Zangyo Shinsei: {name}", body)
 
