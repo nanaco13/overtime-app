@@ -32,7 +32,7 @@ DB_NAME  = os.path.join(BASE_DIR, "db.sqlite3")
 # メール設定
 # =========================
 SMTP_HOST = "fortis.sakura.ne.jp"
-SMTP_PORT = 993
+SMTP_PORT = 587
 FROM_ADDR = "nanako.oomura@fortis-frp.com"
 PASSWORD  = "Fortis12051205" 
 
