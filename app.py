@@ -10,7 +10,7 @@ import secrets
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
 
-SENDGRID_API_KEY = "ここにコピーしたAPIキー"
+SENDGRID_API_KEY = os.environ.get("SENDGRID_API_KEY")
 
 app = FastAPI()
 
@@ -86,13 +86,13 @@ def send_mail(to_list, subject, body):
         "content": [{"type": "text/plain", "value": body}]
     }
     headers = {
-        "Authorization": f"Bearer {SENDGRID_API_KEY}",
-        "Content-Type": "application/json; charset=utf-8"
+        "Authorization": "Bearer " + SENDGRID_API_KEY,
+        "Content-Type": "application/json"
     }
     requests.post(
         "https://api.sendgrid.com/v3/mail/send",
         headers=headers,
-        data=json.dumps(data, ensure_ascii=False).encode("utf-8")
+        json=data
     )
 
 # =========================
