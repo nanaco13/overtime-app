@@ -34,7 +34,7 @@ DB_NAME  = os.path.join(BASE_DIR, "db.sqlite3")
 SMTP_HOST = "fortis.sakura.ne.jp"
 SMTP_PORT = 587
 FROM_ADDR = "nanako.oomura@fortis-frp.com"
-PASSWORD  = "Fortis1205" 
+PASSWORD  = "PASSWORD" 
 
 # 社長・専務
 APPROVERS = ["nanako.oomura@fortis-frp.com"]
